@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "528240026187",
+    "firebase_url": "https://inventarium-36e42.firebaseio.com",
+    "project_id": "inventarium-36e42",
+    "storage_bucket": "inventarium-36e42.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528240026187:android:91d9fbb87ff7c22e",
+        "android_client_info": {
+          "package_name": "com.inventariumapp.inventarium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528240026187-nooqsr4tcfn9ulfvdqoml3ule43moq29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWmMD98KRwSJOB_gd_G-u5_n_WiMp4y9c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528240026187-nooqsr4tcfn9ulfvdqoml3ule43moq29.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

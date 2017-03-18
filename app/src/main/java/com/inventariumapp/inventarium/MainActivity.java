@@ -1,39 +1,73 @@
 package com.inventariumapp.inventarium;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<String> shoppingList = null;
-    ArrayAdapter<String> adapter = null;
-    ListView lv = null;
-
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("testingDB");
+    private Pantry pantry;
+    private ShoppingList shoppingList;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); // Hides the title bar
         setContentView(R.layout.activity_main);
-//        myRef.setValue("Android", "Test");
 
-        shoppingList = new ArrayList<>();
-        Collections.addAll(shoppingList, "Eggs", "Yogurt", "Milk", "Bananas", "Apples", "Tide with bleach", "Cascade");
-        shoppingList.addAll(Arrays.asList("Napkins", "Dog food", "Chapstick", "Bread"));
-        shoppingList.add("Sunscreen");
-        shoppingList.add("Toothpaste");
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, shoppingList);
-        lv = (ListView) findViewById(R.id.pantry_content);
-        lv.setAdapter(adapter);
+        // Adds the pantry and shopping list tabs
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        setTabs();
+        setupTabLayout();
     }
+
+    private void setTabs() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setCurrentTabFragment(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    private void setCurrentTabFragment(int tabPosition)
+    {
+        switch (tabPosition)
+        {
+            case 0 :
+                replaceFragment(pantry);
+                break;
+            case 1 :
+                replaceFragment(shoppingList);
+                break;
+        }
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.frame_container, fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.commit();
+    }
+
+    private void setupTabLayout() {
+        pantry = new Pantry();
+        shoppingList = new ShoppingList();
+
+        tabLayout.addTab(tabLayout.newTab().setText("Pantry"),true);
+        tabLayout.addTab(tabLayout.newTab().setText("Shopping List"));
+    }
+
 }

@@ -12,6 +12,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/DarkGray"
         app:tabGravity="fill"
         app:tabMode="fixed"
         />
@@ -44,7 +45,7 @@
             android:layout_toRightOf="@+id/manual_input"
             android:layout_marginLeft="120dp"
             android:layout_marginBottom="3dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:background="@drawable/barcode_scan"/>
 
 

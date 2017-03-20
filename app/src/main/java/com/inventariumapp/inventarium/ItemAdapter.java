@@ -136,6 +136,11 @@ public class ItemAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public boolean isPendingRemoval(int position) {
+        Item item = items.get(position);
+        return itemsPendingRemoval.contains(item);
+    }
+
     /**
      * Custom ViewHolder
      * Contains textView and undo button

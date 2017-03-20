@@ -2,6 +2,7 @@ package com.inventariumapp.inventarium;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,28 +19,17 @@ import java.util.Collections;
  */
 
 public class Pantry extends Fragment {
-    ArrayList<String> shoppingList = null;
-    ArrayAdapter adapter = null;
-    ListView lv = null;
-
-    // Keeps track of swipes
-    float historicX = Float.NaN, historicY = Float.NaN;
-    static final int DELTA = 50;
-    enum Direction {LEFT, RIGHT;}
+    RecyclerView myView;
 
     @Override
+    // Returns a View from this method that is the root of your fragment's layout
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState ) {
 
         View rootView = inflater.inflate(R.layout.tab1_pantry, container, false);
-        shoppingList = new ArrayList<>();
-        Collections.addAll(shoppingList, "Eggs", "Yogurt", "Milk", "Bananas", "Apples", "Tide with bleach", "Cascade");
-        shoppingList.addAll(Arrays.asList("Napkins", "Dog food", "Chapstick", "Bread"));
-        shoppingList.add("Sunscreen");
-        shoppingList.add("Toothpaste");
-        adapter = new ArrayAdapter(container.getContext(), android.R.layout.simple_list_item_1, shoppingList);
-        lv = (ListView) rootView.findViewById(R.id.pantry_content);
-        lv.setAdapter(adapter);
+        myView = (RecyclerView) rootView.findViewById(R.id.pantry_recycler_view);
+
+
         return rootView;
     }
 }

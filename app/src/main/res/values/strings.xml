@@ -8,4 +8,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main3">Main3Activity</string>
     <string name="manual_input">Add An Item...</string>
+    <string name="button_undo">UNDO</string>
 </resources>

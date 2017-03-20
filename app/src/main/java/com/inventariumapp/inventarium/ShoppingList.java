@@ -22,6 +22,7 @@ public class ShoppingList extends Fragment {
     ListView lv = null;
 
     @Override
+    // fragment to draw its user interface for the first time.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState ) {
 

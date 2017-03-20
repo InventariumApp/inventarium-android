@@ -1,62 +1,34 @@
-package com.inventariumapp.inventarium;
+package com.inventariumapp.inventarium.Utility;
 
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import com.inventariumapp.inventarium.R;
 
 /**
- * Created by Yousef on 2/18/2017.
+ * Created by Yousef on 3/20/2017.
  */
 
-public class Pantry extends Fragment {
+public class ItemHandler {
+
     RecyclerView mRecyclerView;
+    Activity activity;
 
-    @Override
-    // Returns a View from this method that is the root of your fragment's layout
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState ) {
-
-        View rootView = inflater.inflate(R.layout.tab1_pantry, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.pantry_recycler_view);
-
-        setUpRecyclerView();
-        return rootView;
-    }
-
-    private void setUpRecyclerView() {
-        Log.i("Pantry", "Setuprecyclerview");
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mRecyclerView.setAdapter(new ItemAdapter());
-        mRecyclerView.setLayoutManager(llm);
-        mRecyclerView.setHasFixedSize(true);
-        ItemAdapter adapter = (ItemAdapter)mRecyclerView.getAdapter();
-        adapter.addItem(new Item("Adding From \"addItem\"", 300));
-        setUpItemTouchHelper();
-        setUpAnimationDecoratorHelper();
-        Log.i("Pantry", "Setuprecyclerview is done");
+    public ItemHandler(RecyclerView recyclerView, Activity activity) {
+        mRecyclerView = recyclerView;
+        this.activity = activity;
     }
 
     // Implements swipe features
-    private void setUpItemTouchHelper() {
+    public void setUpItemTouchHelper() {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -68,9 +40,9 @@ public class Pantry extends Fragment {
 
             private void init() {
                 background = new ColorDrawable(Color.RED);
-                xMark = ContextCompat.getDrawable(getActivity(), R.drawable.ic_clear_24dp);
+                xMark = ContextCompat.getDrawable(activity, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = (int) getActivity().getResources().getDimension(R.dimen.ic_clear_margin);
+                xMarkMargin = (int) activity.getResources().getDimension(R.dimen.ic_clear_margin);
                 initiated = true;
             }
 
@@ -136,7 +108,7 @@ public class Pantry extends Fragment {
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
-    private void setUpAnimationDecoratorHelper() {
+    public void setUpAnimationDecoratorHelper() {
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
             // we want to cache this and not allocate anything repeatedly in the onDraw method
@@ -215,4 +187,5 @@ public class Pantry extends Fragment {
 
         });
     }
+
 }

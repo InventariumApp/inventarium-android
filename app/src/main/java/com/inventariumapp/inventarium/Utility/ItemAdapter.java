@@ -1,4 +1,4 @@
-package com.inventariumapp.inventarium;
+package com.inventariumapp.inventarium.Utility;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.inventariumapp.inventarium.R;
+import com.inventariumapp.inventarium.Utility.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +91,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
         else{
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             viewHolder.view.setVisibility(View.VISIBLE);
-            viewHolder.view.setText(item.getItemName());
+            viewHolder.view.setText(item.getItemName() + " " + Integer.toString(item.getItemCount()));
             viewHolder.undoButton.setVisibility(View.GONE);
             viewHolder.undoButton.setOnClickListener(null);
         }
@@ -148,6 +151,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
      */
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView view;
+
         Button undoButton;
 
         public ItemViewHolder(ViewGroup parent) {

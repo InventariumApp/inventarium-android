@@ -1,4 +1,4 @@
-package com.inventariumapp.inventarium;
+package com.inventariumapp.inventarium.Utility;
 
 /**
  * Created by Yousef on 3/19/2017.

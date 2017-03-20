@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.Utility.ItemHandler;
 import com.inventariumapp.inventarium.Utility.Item;
 import com.inventariumapp.inventarium.Utility.ItemAdapter;
@@ -31,6 +33,11 @@ public class Pantry extends Fragment {
     // Returns a View from this method that is the root of your fragment's layout
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Get data from Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
 
         View rootView = inflater.inflate(R.layout.tab1_pantry, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.pantry_recycler_view);

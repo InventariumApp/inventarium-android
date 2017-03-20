@@ -9,4 +9,6 @@
     <string name="title_activity_main3">Main3Activity</string>
     <string name="manual_input">Add An Item...</string>
     <string name="button_undo">UNDO</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="sign_in">Sign In</string>
 </resources>

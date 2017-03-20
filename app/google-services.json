@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "528240026187",
-    "firebase_url": "https://inventarium-36e42.firebaseio.com",
-    "project_id": "inventarium-36e42",
-    "storage_bucket": "inventarium-36e42.appspot.com"
+    "project_number": "66504498896",
+    "firebase_url": "https://inventarium-30eaf.firebaseio.com",
+    "project_id": "inventarium-30eaf",
+    "storage_bucket": "inventarium-30eaf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:528240026187:android:91d9fbb87ff7c22e",
+        "mobilesdk_app_id": "1:66504498896:android:91d9fbb87ff7c22e",
         "android_client_info": {
           "package_name": "com.inventariumapp.inventarium"
         }
       },
       "oauth_client": [
         {
-          "client_id": "528240026187-nooqsr4tcfn9ulfvdqoml3ule43moq29.apps.googleusercontent.com",
+          "client_id": "66504498896-dr6nn4e2fj8c45u0afpnpvapccthlko7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inventariumapp.inventarium",
+            "certificate_hash": "60a9d531fcb32e734b4782e097299a17e80de2b2"
+          }
+        },
+        {
+          "client_id": "66504498896-vfrlptnou12s1ihiv3t8qa2gi354ggqb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCWmMD98KRwSJOB_gd_G-u5_n_WiMp4y9c"
+          "current_key": "AIzaSyD1XIbq-nQ1ERimLzq8Sm-aEidpSwBGzyc"
         }
       ],
       "services": {
@@ -32,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "528240026187-nooqsr4tcfn9ulfvdqoml3ule43moq29.apps.googleusercontent.com",
+              "client_id": "66504498896-vfrlptnou12s1ihiv3t8qa2gi354ggqb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ItemAdapter extends RecyclerView.Adapter {
 
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
+    private static final int PENDING_REMOVAL_TIMEOUT = 1000; // 1sec
 
     // Keep track of items and their removals
     private List<Item> items;
@@ -36,15 +36,16 @@ public class ItemAdapter extends RecyclerView.Adapter {
         items = new ArrayList<>();
         itemsPendingRemoval = new ArrayList<>();
 
-        // Dummy Data
-        Item a = new Item("Bannanna", 3);
-        Item b = new Item("Apple", 1);
-        Item c = new Item("Pineapple", 0);
-        Item d = new Item("Chips", 10);
+        Item a = new Item("Apple", 3);
+        Item b = new Item("Bannana", 1);
+        Item c = new Item("Orange", 4);
+        Item d = new Item("Cookies", 7);
+        Item e = new Item("Cherrios", 0);
         items.add(a);
         items.add(b);
         items.add(c);
         items.add(d);
+        items.add(e);
     }
 
     @Override

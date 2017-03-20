@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,12 +43,16 @@ public class Pantry extends Fragment {
     }
 
     private void setUpRecyclerView() {
+        Log.i("Pantry", "Setuprecyclerview");
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(new ItemAdapter());
+        mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setHasFixedSize(true);
+        ItemAdapter adapter = (ItemAdapter)mRecyclerView.getAdapter();
+        adapter.addItem(new Item("Adding From \"addItem\"", 300));
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
+        Log.i("Pantry", "Setuprecyclerview is done");
     }
 
     // Implements swipe features

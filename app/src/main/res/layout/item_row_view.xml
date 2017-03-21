@@ -17,12 +17,22 @@
         />
 
     <Button
-        android:id="@+id/undo_button"
+        android:id="@+id/undo_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_undo"
         android:textColor="@android:color/white"
         android:layout_gravity="end|center_vertical"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        />
+
+    <Button
+        android:id="@+id/undo_move_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_undo"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_vertical"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         />
 

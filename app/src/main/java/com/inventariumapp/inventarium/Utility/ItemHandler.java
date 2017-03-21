@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 
 import com.inventariumapp.inventarium.R;
@@ -30,20 +31,34 @@ public class ItemHandler {
     // Implements swipe features
     public void setUpItemTouchHelper() {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        // Swipe Left
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             // we want to cache these and not allocate anything repeatedly in the onChildDraw method
             Drawable background;
             Drawable xMark;
             int xMarkMargin;
-            boolean initiated;
+            boolean initiatedL;
+            boolean initiatedR;
 
-            private void init() {
+            // Swipe Left to delete!
+            private void initLeftSwipe() {
                 background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(activity, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) activity.getResources().getDimension(R.dimen.ic_clear_margin);
-                initiated = true;
+                initiatedL = true;
+                initiatedR = false;
+            }
+
+            // Swipe Right to move
+            private void initRightSwipe() {
+                background = new ColorDrawable(Color.GREEN);
+                xMark = ContextCompat.getDrawable(activity, R.drawable.ic_clear_24dp);
+                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMarkMargin = (int) activity.getResources().getDimension(R.dimen.ic_clear_margin);
+                initiatedR = true;
+                initiatedL = false;
             }
 
             // not important, we don't want drag & drop
@@ -66,7 +81,16 @@ public class ItemHandler {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 ItemAdapter adapter = (ItemAdapter)mRecyclerView.getAdapter();
-                adapter.addToPendingRemoval(swipedPosition);
+                if (swipeDir == ItemTouchHelper.LEFT) {
+                    initLeftSwipe();
+                    adapter.swipeDir = ItemAdapter.SwipeDir.LEFT;
+                    adapter.addToPendingRemoval(swipedPosition);
+                }
+                if (swipeDir == ItemTouchHelper.RIGHT) {
+                    initRightSwipe();
+                    adapter.swipeDir = ItemAdapter.SwipeDir.RIGHT;
+                    adapter.addToPendingRemoval(swipedPosition);
+                }
             }
 
             @Override
@@ -79,28 +103,57 @@ public class ItemHandler {
                     return;
                 }
 
-                if (!initiated) {
-                    init();
+                if (dX > 0) { // swiping right to move
+
+                    if (!initiatedR) {
+                        initRightSwipe();
+                    }
+
+                    // draw red background
+                    background.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                    background.draw(c);
+
+                    // draw + mark
+                    int itemHeight = itemView.getBottom() - itemView.getTop();
+                    int intrinsicWidth = xMark.getIntrinsicWidth();
+                    int intrinsicHeight = xMark.getIntrinsicWidth();
+
+                    int xMarkLeft = itemView.getLeft() + xMarkMargin ;
+                    int xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
+
+                    int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                    int xMarkBottom = xMarkTop + intrinsicHeight;
+                    xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+
+                    xMark.draw(c);
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
+                else {// swiping left to delete
 
-                // draw red background
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
+                    if (!initiatedL) {
+                        initLeftSwipe();
+                    }
 
-                // draw x mark
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
+                    // draw green background
+                    background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                    background.draw(c);
 
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                    // draw x mark
+                    int itemHeight = itemView.getBottom() - itemView.getTop();
+                    int intrinsicWidth = xMark.getIntrinsicWidth();
+                    int intrinsicHeight = xMark.getIntrinsicWidth();
 
-                xMark.draw(c);
+                    int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                    int xMarkRight = itemView.getRight() - xMarkMargin;
+                    int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                    int xMarkBottom = xMarkTop + intrinsicHeight;
+                    xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                    xMark.draw(c);
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
             }
 
         };
@@ -113,19 +166,21 @@ public class ItemHandler {
 
             // we want to cache this and not allocate anything repeatedly in the onDraw method
             Drawable background;
-            boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
-                initiated = true;
+                ItemAdapter adapter = (ItemAdapter)mRecyclerView.getAdapter();
+
+                if (adapter.swipeDir == ItemAdapter.SwipeDir.RIGHT) {
+                    background = new ColorDrawable(Color.GREEN);
+                }
+                else if (adapter.swipeDir == ItemAdapter.SwipeDir.LEFT) {
+                    background = new ColorDrawable(Color.RED);
+                }
             }
 
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
+                init();
 
                 // only if animation is in progress
                 if (parent.getItemAnimator().isRunning()) {

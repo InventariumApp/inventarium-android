@@ -1,6 +1,7 @@
 package com.inventariumapp.inventarium.Activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,7 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +21,8 @@ import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("testingDB");
@@ -36,11 +41,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide(); // Hides the title bar
         setContentView(R.layout.activity_main);
 
-        // Adds the pantry and shopping list tabs
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        setTabs();
-        setupTabLayout();
-
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -50,8 +50,19 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         } else {
-
+            // Adds the pantry and shopping list tabs
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            setTabs();
+            setupTabLayout();
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d("Main Activity", "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
     private void setTabs() {

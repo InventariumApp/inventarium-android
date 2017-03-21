@@ -29,6 +29,10 @@ public class ItemAdapter extends RecyclerView.Adapter {
     private List<Item> items;
     private List<Item> itemsPendingRemoval;
 
+    // Track Swipe Dir
+    public enum SwipeDir {LEFT, RIGHT};
+    public SwipeDir swipeDir;
+
     // Use a thread to handle removles so that the user can undo their action
     private HashMap<Item, Runnable> pendingRunnables = new HashMap<>();
     private Handler handler = new Handler();
@@ -69,12 +73,36 @@ public class ItemAdapter extends RecyclerView.Adapter {
         // Handles removal
         // Shows undo and paints background red
         if (itemsPendingRemoval.contains(item)) {
-            viewHolder.itemView.setBackgroundColor(Color.RED);
-            viewHolder.view.setVisibility(View.GONE);
-            viewHolder.undoButton.setVisibility(View.VISIBLE);
+            if (swipeDir == SwipeDir.RIGHT) {
+                viewHolder.itemView.setBackgroundColor(Color.GREEN);
+                viewHolder.view.setVisibility(View.GONE);
+                viewHolder.undoMoveButton.setVisibility(View.VISIBLE);
+                viewHolder.undoDeleteButton.setVisibility(View.GONE);
+            }
+            if (swipeDir == SwipeDir.LEFT) {
+                viewHolder.itemView.setBackgroundColor(Color.RED);
+                viewHolder.view.setVisibility(View.GONE);
+                viewHolder.undoDeleteButton.setVisibility(View.VISIBLE);
+                viewHolder.undoMoveButton.setVisibility(View.GONE);
+            }
+
 
             // Handle the undo
-            viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
+            viewHolder.undoDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Runnable pendingRemovalRunnable = pendingRunnables.get(item);
+                    pendingRunnables.remove(item);
+                    if (pendingRemovalRunnable != null) {
+                        handler.removeCallbacks(pendingRemovalRunnable);
+                    }
+                    itemsPendingRemoval.remove(item);
+                    notifyItemChanged(items.indexOf(item));
+                }
+            });
+
+            // Handle the undo
+            viewHolder.undoMoveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Runnable pendingRemovalRunnable = pendingRunnables.get(item);
@@ -92,8 +120,10 @@ public class ItemAdapter extends RecyclerView.Adapter {
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             viewHolder.view.setVisibility(View.VISIBLE);
             viewHolder.view.setText(item.getItemName() + " " + Integer.toString(item.getItemCount()));
-            viewHolder.undoButton.setVisibility(View.GONE);
-            viewHolder.undoButton.setOnClickListener(null);
+            viewHolder.undoDeleteButton.setVisibility(View.GONE);
+            viewHolder.undoDeleteButton.setOnClickListener(null);
+            viewHolder.undoMoveButton.setVisibility(View.GONE);
+            viewHolder.undoMoveButton.setOnClickListener(null);
         }
     }
 
@@ -151,13 +181,14 @@ public class ItemAdapter extends RecyclerView.Adapter {
      */
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView view;
-
-        Button undoButton;
+        Button undoDeleteButton;
+        Button undoMoveButton;
 
         public ItemViewHolder(ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_view, parent, false));
             view = (TextView) itemView.findViewById(R.id.item_text_view);
-            undoButton = (Button) itemView.findViewById(R.id.undo_button);
+            undoDeleteButton = (Button) itemView.findViewById(R.id.undo_delete_button);
+            undoMoveButton = (Button) itemView.findViewById(R.id.undo_move_button);
         }
     }
 }

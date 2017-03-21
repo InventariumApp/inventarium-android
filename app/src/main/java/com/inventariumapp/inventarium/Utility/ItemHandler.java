@@ -14,6 +14,8 @@ import android.view.View;
 
 import com.inventariumapp.inventarium.R;
 
+import static android.R.drawable.ic_input_add;
+
 /**
  * Created by Yousef on 3/20/2017.
  */
@@ -54,7 +56,7 @@ public class ItemHandler {
             // Swipe Right to move
             private void initRightSwipe() {
                 background = new ColorDrawable(Color.GREEN);
-                xMark = ContextCompat.getDrawable(activity, R.drawable.ic_clear_24dp);
+                xMark = ContextCompat.getDrawable(activity, ic_input_add);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) activity.getResources().getDimension(R.dimen.ic_clear_margin);
                 initiatedR = true;

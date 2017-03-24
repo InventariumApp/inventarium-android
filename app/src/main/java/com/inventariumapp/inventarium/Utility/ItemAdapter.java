@@ -43,11 +43,11 @@ public class ItemAdapter extends RecyclerView.Adapter {
         items = new ArrayList<>();
         itemsPendingRemoval = new ArrayList<>();
 
-        Item a = new Item("Apple", 3);
-        Item b = new Item("Bannana", 1);
-        Item c = new Item("Orange", 4);
-        Item d = new Item("Cookies", 7);
-        Item e = new Item("Cherrios", 0);
+        Item a = new Item("Chips", 3, "");
+        Item b = new Item("Cookies", 1, "");
+        Item c = new Item("Potatoes", 4, "");
+        Item d = new Item("Milk", 7, "");
+        Item e = new Item("Peanuts  ", 0, "");
         items.add(a);
         items.add(b);
         items.add(c);
@@ -119,7 +119,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
         else{
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             viewHolder.view.setVisibility(View.VISIBLE);
-            viewHolder.view.setText(item.getItemName() + " " + Integer.toString(item.getItemCount()));
+            viewHolder.view.setText(item.getName() + " " + item.getCount());
             viewHolder.undoDeleteButton.setVisibility(View.GONE);
             viewHolder.undoDeleteButton.setOnClickListener(null);
             viewHolder.undoMoveButton.setVisibility(View.GONE);

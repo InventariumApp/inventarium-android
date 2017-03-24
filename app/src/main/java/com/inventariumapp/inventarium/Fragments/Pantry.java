@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,16 +16,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.inventariumapp.inventarium.Utility.ItemAdapterV3;
 import com.inventariumapp.inventarium.Utility.ItemHandler;
 import com.inventariumapp.inventarium.Utility.Item;
 import com.inventariumapp.inventarium.Utility.ItemAdapter;
 import com.inventariumapp.inventarium.R;
+import com.inventariumapp.inventarium.Utility.ItemHandlerV2;
+import com.inventariumapp.inventarium.Utility.ItemHolder;
 
 /**
  * Created by Yousef on 2/18/2017.
@@ -47,36 +52,21 @@ public class Pantry extends Fragment {
 
         // Set Up recycler view
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        mRecyclerView.setAdapter(new ItemAdapter());
+       // mRecyclerView.setAdapter(new ItemAdapter());
         mRecyclerView.setLayoutManager(llm);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("pantry-list");
+        Log.i("shoppingList", mFirebaseDatabaseReference.toString());
+
+        ItemAdapterV3 adapterv2 = new ItemAdapterV3(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, getContext(), "pantry");
+
+        mRecyclerView.setAdapter(adapterv2);
 
         // Set up animations and touch events
-        ItemHandler itemHandler = new ItemHandler(mRecyclerView, getActivity());
+        ItemHandlerV2 itemHandler = new ItemHandlerV2(mRecyclerView, getActivity());
         itemHandler.setUpItemTouchHelper();
         itemHandler.setUpAnimationDecoratorHelper();
-        setUpDataBase();
+
         return rootView;
-    }
-
-    private void setUpDataBase() {
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("Pantry");
-        Log.i("DB ref", mFirebaseDatabaseReference.toString());
-        Log.i("DB key", mFirebaseDatabaseReference.getKey().toString());
-        // Attach a listener to read the data at our posts reference
-        mFirebaseDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Object obj = snapshot.getValue();
-                    Log.i("snapshot children value", obj.toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
     }
 }

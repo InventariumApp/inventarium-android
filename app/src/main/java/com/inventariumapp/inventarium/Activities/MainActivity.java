@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
+
+import static android.R.id.message;
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -44,17 +50,17 @@ public class MainActivity extends AppCompatActivity
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
-            return;
-        } else {
+//        if (mFirebaseUser == null) {
+//            // Not signed in, launch the Sign In activity
+//            startActivity(new Intent(this, SignInActivity.class));
+//            finish();
+//            return;
+//        } else {
             // Adds the pantry and shopping list tabs
             tabLayout = (TabLayout) findViewById(R.id.tabs);
             setTabs();
             setupTabLayout();
-        }
+        //}
     }
 
     @Override
@@ -110,4 +116,12 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText("Pantry"),true);
         tabLayout.addTab(tabLayout.newTab().setText("Shopping List"));
     }
+
+    public void onManualClick(View v) {
+        Log.i("onManualClick", Integer.toString(tabLayout.getSelectedTabPosition()));
+        Intent intent = new Intent(this, ManualInput.class);
+        intent.putExtra("message", Integer.toString(tabLayout.getSelectedTabPosition()));
+        startActivity(intent);
+    }
+
 }

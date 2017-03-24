@@ -18,7 +18,8 @@
         <activity
             android:name=".Activities.SignInActivity"
             android:label="@string/title_activity_sign_in"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activities.ManualInput"></activity>
     </application>
 
 </manifest>

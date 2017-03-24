@@ -10,29 +10,38 @@ package com.inventariumapp.inventarium.Utility;
  */
 public class Item {
 
-    private String itemName;
-    private int itemCount;
+    private String name;
+    private int count;
+    private String addedByUser;
 
-    public Item(String name, int count) {
-        itemName = name;
-        itemCount = count;
+    // Needed for Firebase
+    public Item() {
+
+    }
+    public Item(String name, int count, String addedByUser) {
+        this.name = name;
+        this.count = count;
+        this.addedByUser = addedByUser;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getName() {
+        return name;
     }
 
-    public int getItemCount() {
-        return itemCount;
+    public int getCount() {
+        return count;
     }
 
-    public void setItemName(String name) {
-        itemName = name;
+    public String getAddedByUser() { return addedByUser;}
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setItemCount(int count) {
-        itemCount = count;
+    public void setCount(int count) {
+        this.count = count;
     }
 
+    public void setAddedByUser(String addedByUser) {this.addedByUser = addedByUser;}
 
 }

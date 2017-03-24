@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "66504498896",
-    "firebase_url": "https://inventarium-30eaf.firebaseio.com",
-    "project_id": "inventarium-30eaf",
-    "storage_bucket": "inventarium-30eaf.appspot.com"
+    "project_number": "215106753040",
+    "firebase_url": "https://nifty-acolyte-159120.firebaseio.com",
+    "project_id": "nifty-acolyte-159120",
+    "storage_bucket": "nifty-acolyte-159120.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:66504498896:android:91d9fbb87ff7c22e",
+        "mobilesdk_app_id": "1:215106753040:android:91d9fbb87ff7c22e",
         "android_client_info": {
           "package_name": "com.inventariumapp.inventarium"
         }
       },
       "oauth_client": [
         {
-          "client_id": "66504498896-dr6nn4e2fj8c45u0afpnpvapccthlko7.apps.googleusercontent.com",
+          "client_id": "215106753040-sjvapqlpjn0mlj7tft63qkldjldjbhhr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.inventariumapp.inventarium",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "66504498896-vfrlptnou12s1ihiv3t8qa2gi354ggqb.apps.googleusercontent.com",
+          "client_id": "215106753040-mie73nbuaath0ufm3nbtv8kqihedp8la.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD1XIbq-nQ1ERimLzq8Sm-aEidpSwBGzyc"
+          "current_key": "AIzaSyAGcp88g6n3DZMqDC59jCdbm_6JUVzQFPU"
         }
       ],
       "services": {
@@ -40,7 +40,14 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "66504498896-vfrlptnou12s1ihiv3t8qa2gi354ggqb.apps.googleusercontent.com",
+              "client_id": "215106753040-jlm30rgmavqtsb6c662f76gfptbeov0n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inventariumapp.Inventarium"
+              }
+            },
+            {
+              "client_id": "215106753040-mie73nbuaath0ufm3nbtv8kqihedp8la.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

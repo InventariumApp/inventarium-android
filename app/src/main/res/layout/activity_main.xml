@@ -36,7 +36,9 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/manual_input"
-            android:background="@drawable/manual_input"/>
+            android:background="@drawable/manual_input"
+            android:onClick="onManualClick"
+            android:clickable="true"/>/>
 
         <ImageButton
             android:id="@+id/barcode_scan"

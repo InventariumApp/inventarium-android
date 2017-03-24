@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 import com.inventariumapp.inventarium.R;
@@ -17,15 +16,15 @@ import com.inventariumapp.inventarium.R;
 import static android.R.drawable.ic_input_add;
 
 /**
- * Created by Yousef on 3/20/2017.
+ * Created by Yousef on 3/24/2017.
  */
 
-public class ItemHandler {
+public class ItemHandlerV2 {
 
     RecyclerView mRecyclerView;
     Activity activity;
 
-    public ItemHandler(RecyclerView recyclerView, Activity activity) {
+    public ItemHandlerV2(RecyclerView recyclerView, Activity activity) {
         mRecyclerView = recyclerView;
         this.activity = activity;
     }
@@ -72,7 +71,7 @@ public class ItemHandler {
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-                ItemAdapter itemAdapter = (ItemAdapter)recyclerView.getAdapter();
+                ItemAdapterV3 itemAdapter = (ItemAdapterV3)recyclerView.getAdapter();
                 if (itemAdapter.isPendingRemoval(position)) {
                     return 0;
                 }
@@ -82,16 +81,16 @@ public class ItemHandler {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-                ItemAdapter adapter = (ItemAdapter)mRecyclerView.getAdapter();
+                ItemAdapterV3 adapter = (ItemAdapterV3)mRecyclerView.getAdapter();
                 if (swipeDir == ItemTouchHelper.LEFT) {
                     initLeftSwipe();
-                    adapter.swipeDir = ItemAdapter.SwipeDir.LEFT;
-                    adapter.addToPendingRemoval(swipedPosition);
+                    adapter.swipeDir = "LEFT";
+                    adapter.addToPendingRemoval(swipedPosition, false);
                 }
                 if (swipeDir == ItemTouchHelper.RIGHT) {
                     initRightSwipe();
-                    adapter.swipeDir = ItemAdapter.SwipeDir.RIGHT;
-                    adapter.addToPendingRemoval(swipedPosition);
+                    adapter.swipeDir = "RIGHT";
+                    adapter.addToPendingRemoval(swipedPosition, true);
                 }
             }
 
@@ -167,15 +166,15 @@ public class ItemHandler {
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
             // we want to cache this and not allocate anything repeatedly in the onDraw method
-            Drawable background;
+            Drawable background = new ColorDrawable(Color.WHITE);
 
             private void init() {
-                ItemAdapter adapter = (ItemAdapter) mRecyclerView.getAdapter();
+                ItemAdapterV3 adapter = (ItemAdapterV3) mRecyclerView.getAdapter();
 
-                if (adapter.swipeDir == ItemAdapter.SwipeDir.RIGHT) {
+                if (adapter.swipeDir == "RIGHT") {
                     background = new ColorDrawable(Color.GREEN);
                 }
-                else if (adapter.swipeDir == ItemAdapter.SwipeDir.LEFT) {
+                else if (adapter.swipeDir == "LEFT") {
                     background = new ColorDrawable(Color.RED);
                 }
             }
@@ -244,5 +243,4 @@ public class ItemHandler {
 
         });
     }
-
 }

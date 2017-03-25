@@ -32,20 +32,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/manual_input"
             android:background="@drawable/manual_input"
             android:onClick="onManualClick"
-            android:clickable="true"/>/>
+            android:clickable="true"/>
 
         <ImageButton
             android:id="@+id/barcode_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/manual_input"
-            android:layout_marginLeft="120dp"
+            android:layout_toEndOf="@+id/manual_input"
+            android:layout_marginStart="120dp"
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
             android:background="@drawable/barcode_scan"/>
@@ -56,8 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/barcode_scan"
-            android:layout_marginLeft="15dp"
+            android:layout_toEndOf="@+id/barcode_scan"
+            android:layout_marginStart="15dp"
             android:background="@drawable/image_recognition"/>
 
     </RelativeLayout>

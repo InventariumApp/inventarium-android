@@ -13,9 +13,6 @@ import android.view.View;
 
 import com.inventariumapp.inventarium.R;
 
-import static android.R.drawable.ic_delete;
-import static android.R.drawable.ic_input_add;
-import static android.R.drawable.ic_menu_delete;
 
 /**
  * Created by Yousef on 3/24/2017.
@@ -27,8 +24,8 @@ public class ItemHandler {
     // Either "shoppingList" or "pantry
     private String listName;
 
-    RecyclerView mRecyclerView;
-    Activity activity;
+    private RecyclerView mRecyclerView;
+    private Activity activity;
 
     public ItemHandler(RecyclerView recyclerView, Activity activity, String listName) {
         mRecyclerView = recyclerView;

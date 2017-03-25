@@ -23,10 +23,7 @@ import com.inventariumapp.inventarium.Utility.ItemHolder;
 
 public class Pantry extends Fragment {
 
-    // Firebase dataBase
-    private DatabaseReference mFirebaseDatabaseReference;
-
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
     @Override
     // Returns a View from this method that is the root of your fragment's layout
@@ -35,6 +32,9 @@ public class Pantry extends Fragment {
         
         View rootView = inflater.inflate(R.layout.tab1_pantry, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.pantry_recycler_view);
+
+        // Firebase dataBase
+        DatabaseReference mFirebaseDatabaseReference;
 
         // Set Up recycler view
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

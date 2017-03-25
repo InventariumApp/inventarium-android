@@ -14,9 +14,6 @@ import com.inventariumapp.inventarium.R;
 import com.inventariumapp.inventarium.Utility.Item;
 
 public class ManualInput extends AppCompatActivity {
-    // Firebase dataBase
-    private DatabaseReference mFirebaseDatabaseReference;
-
     private String message;
 
     @Override
@@ -27,7 +24,6 @@ public class ManualInput extends AppCompatActivity {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         message = intent.getStringExtra("message");
-        Log.i("message", message);
     }
 
     public void clickCancel(View view) {
@@ -36,7 +32,8 @@ public class ManualInput extends AppCompatActivity {
     }
 
     public void clickAdd(View view) {
-
+        // Firebase dataBase
+        DatabaseReference mFirebaseDatabaseReference;
         EditText count = (EditText)findViewById(R.id.count);
         EditText name = (EditText)findViewById(R.id.name);
         if (name.getText().toString().matches("")) {

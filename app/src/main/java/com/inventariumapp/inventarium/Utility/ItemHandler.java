@@ -90,23 +90,23 @@ public class ItemHandler {
                 if (listName.equals("pantry")) {
                     if (swipeDir == ItemTouchHelper.LEFT) {
                         initSwipeToDelete();
-                        adapter.setSwipeDir(ItemAdapter.SwipDir.LEFT);
+                        adapter.setSwipeDir(SwipeDir.LEFT);
                         adapter.addToPendingRemoval(swipedPosition, false);
                     }
                     if (swipeDir == ItemTouchHelper.RIGHT) {
                         initSwipeToMove();
-                        adapter.setSwipeDir(ItemAdapter.SwipDir.RIGHT);
+                        adapter.setSwipeDir(SwipeDir.RIGHT);
                         adapter.addToPendingRemoval(swipedPosition, true);
                     }
                 } else { // shoppingList
                     if (swipeDir == ItemTouchHelper.LEFT) {
                         initSwipeToMove();
-                        adapter.setSwipeDir(ItemAdapter.SwipDir.LEFT);
+                        adapter.setSwipeDir(SwipeDir.LEFT);
                         adapter.addToPendingRemoval(swipedPosition, true);
                     }
                     if (swipeDir == ItemTouchHelper.RIGHT) {
                         initSwipeToDelete();
-                        adapter.setSwipeDir(ItemAdapter.SwipDir.RIGHT);
+                        adapter.setSwipeDir(SwipeDir.RIGHT);
                         adapter.addToPendingRemoval(swipedPosition, false);
                     }
                 }
@@ -238,11 +238,11 @@ public class ItemHandler {
             private void init() {
                 ItemAdapter adapter = (ItemAdapter) mRecyclerView.getAdapter();
 
-                if (adapter.getSwipeDir() == ItemAdapter.SwipDir.RIGHT) {
+                if (adapter.getSwipeDir() == SwipeDir.RIGHT) {
                     if (listName.equals("shoppingList")) {background = new ColorDrawable(Color.RED); }
                     else {background = new ColorDrawable(Color.GREEN); }
                 }
-                else if (adapter.getSwipeDir() == ItemAdapter.SwipDir.LEFT) {
+                else if (adapter.getSwipeDir() == SwipeDir.LEFT) {
                     if (listName.equals("shoppingList")) {background = new ColorDrawable(Color.GREEN); }
                     else {background = new ColorDrawable(Color.RED); }
                 }

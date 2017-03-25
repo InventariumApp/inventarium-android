@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +23,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
     private List<String> itemsPendingRemoval;
 
     // Track Swipe Dir
-    public enum SwipDir {RIGHT, LEFT};
-    private SwipDir swipeDir;
+    private SwipeDir swipeDir;
 
     // Use a thread to handle removals so that the user can undo their action
     private HashMap<String, Runnable> pendingRunnables = new HashMap<>();
@@ -47,7 +45,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
         // Shows undo and paints background red or green accordingly
         if (itemsPendingRemoval.contains(item.getName())) {
             if (listName.equals("pantry")) {
-                if (swipeDir == SwipDir.LEFT) {
+                if (swipeDir == SwipeDir.LEFT) {
                     swipeToDelete(itemViewHolder);
                 }
                 else {
@@ -55,7 +53,7 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
                 }
             }
             else { // shoppingList
-                if (swipeDir == SwipDir.LEFT) {
+                if (swipeDir == SwipeDir.LEFT) {
                     swipeToMove(itemViewHolder);
                 }
                 else {
@@ -137,12 +135,12 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
     }
 
     // Sets swipe dir
-    public void setSwipeDir(SwipDir dir) {
+    public void setSwipeDir(SwipeDir dir) {
         swipeDir = dir;
     }
 
     // Returns swipe dir
-    public SwipDir getSwipeDir() { return swipeDir;}
+    public SwipeDir getSwipeDir() { return swipeDir;}
 
 
     // Used to remove an Item

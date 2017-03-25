@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onManualClick(View v) {
-        Log.i("onManualClick", Integer.toString(tabLayout.getSelectedTabPosition()));
         Intent intent = new Intent(this, ManualInput.class);
         intent.putExtra("message", Integer.toString(tabLayout.getSelectedTabPosition()));
         startActivity(intent);

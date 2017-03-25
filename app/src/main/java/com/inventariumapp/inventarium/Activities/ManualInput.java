@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,6 +39,14 @@ public class ManualInput extends AppCompatActivity {
 
         EditText count = (EditText)findViewById(R.id.count);
         EditText name = (EditText)findViewById(R.id.name);
+        if (name.getText().toString().matches("")) {
+            Toast.makeText(this, "You did not enter a item name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (count.getText().toString().matches("")) {
+            Toast.makeText(this, "You did not enter a count", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),"iphoneaccount@gmail,com");
         if (message.equals("0")) {
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("pantry-list");

@@ -94,8 +94,10 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
         // Not set to be removed, show it
         else{
             itemViewHolder.itemView.setBackgroundColor(Color.WHITE);
-            itemViewHolder.getView().setVisibility(View.VISIBLE);
-            itemViewHolder.getView().setText(item.getName() + " " + item.getCount());
+            itemViewHolder.getNameView().setVisibility(View.VISIBLE);
+            itemViewHolder.getNameView().setText(item.getName());
+            itemViewHolder.getCountView().setVisibility(View.VISIBLE);
+            itemViewHolder.getCountView().setText(Integer.toString(item.getCount()));
             itemViewHolder.getRightButton().setVisibility(View.GONE);
             itemViewHolder.getRightButton().setOnClickListener(null);
             itemViewHolder.getLeftButton().setVisibility(View.GONE);
@@ -106,7 +108,9 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
     // Colors and reveals swipe to move layout
     private void swipeToMove(ItemHolder itemViewHolder) {
         itemViewHolder.itemView.setBackgroundColor(Color.GREEN);
-        itemViewHolder.getView().setVisibility(View.GONE);
+        itemViewHolder.getNameView().setVisibility(View.GONE);
+        itemViewHolder.getCountView().setVisibility(View.GONE);
+
         if (listName.equals("shoppingList")) {
             itemViewHolder.getLeftButton().setVisibility(View.VISIBLE);
             itemViewHolder.getRightButton().setVisibility(View.GONE);
@@ -120,7 +124,8 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
     // Colors and reveals swipe to delete layout
     private void swipeToDelete(ItemHolder itemViewHolder) {
         itemViewHolder.itemView.setBackgroundColor(Color.RED);
-        itemViewHolder.getView().setVisibility(View.GONE);
+        itemViewHolder.getNameView().setVisibility(View.GONE);
+        itemViewHolder.getCountView().setVisibility(View.GONE);
         if (listName.equals("shoppingList")) {
             itemViewHolder.getLeftButton().setVisibility(View.GONE);
             itemViewHolder.getRightButton().setVisibility(View.VISIBLE);

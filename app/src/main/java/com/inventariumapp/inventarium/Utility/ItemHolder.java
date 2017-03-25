@@ -15,20 +15,24 @@ import com.inventariumapp.inventarium.R;
 
 public class ItemHolder extends RecyclerView.ViewHolder {
 
-    private TextView view;
+    private TextView nameView;
+    private TextView countView;
     private Button leftButton;
     private Button rightButton;
 
     public ItemHolder(View itemView) {
         super(itemView);
-        view = (TextView) itemView.findViewById(R.id.item_text_view);
+        nameView = (TextView) itemView.findViewById(R.id.item_text_view);
+        countView = (TextView) itemView.findViewById(R.id.count_text_view);
         rightButton = (Button) itemView.findViewById(R.id.right_button);
         leftButton = (Button) itemView.findViewById(R.id.left_button);
     }
 
-    public TextView getView() {
-        return view;
+    public TextView getCountView() {
+        return countView;
     }
+
+    public TextView getNameView() {return nameView; }
 
     public Button getRightButton() {
         return leftButton;

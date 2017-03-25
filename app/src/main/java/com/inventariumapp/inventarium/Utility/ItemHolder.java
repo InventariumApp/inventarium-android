@@ -16,25 +16,25 @@ import com.inventariumapp.inventarium.R;
 public class ItemHolder extends RecyclerView.ViewHolder {
 
     private TextView view;
-    private Button undoDeleteButton;
-    private Button undoMoveButton;
+    private Button leftButton;
+    private Button rightButton;
 
     public ItemHolder(View itemView) {
         super(itemView);
         view = (TextView) itemView.findViewById(R.id.item_text_view);
-        undoDeleteButton = (Button) itemView.findViewById(R.id.undo_delete_button);
-        undoMoveButton = (Button) itemView.findViewById(R.id.undo_move_button);
+        rightButton = (Button) itemView.findViewById(R.id.right_button);
+        leftButton = (Button) itemView.findViewById(R.id.left_button);
     }
 
     public TextView getView() {
         return view;
     }
 
-    public Button getUndoDeleteButton() {
-        return undoDeleteButton;
+    public Button getRightButton() {
+        return leftButton;
     }
 
-    public Button getUndoMoveButton() {
-        return undoMoveButton;
+    public Button getLeftButton() {
+        return rightButton;
     }
 }

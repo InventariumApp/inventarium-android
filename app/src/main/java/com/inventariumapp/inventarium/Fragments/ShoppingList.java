@@ -1,6 +1,5 @@
 package com.inventariumapp.inventarium.Fragments;
 
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,24 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.R;
 import com.inventariumapp.inventarium.Utility.ItemAdapter;
-import com.inventariumapp.inventarium.Utility.ItemAdapterV3;
-import com.inventariumapp.inventarium.Utility.ItemAdapterv2;
 import com.inventariumapp.inventarium.Utility.ItemHandler;
-import com.inventariumapp.inventarium.Utility.ItemHandlerV2;
 import com.inventariumapp.inventarium.Utility.ItemHolder;
 import com.inventariumapp.inventarium.Utility.Item;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Created by Yousef on 2/18/2017.
@@ -49,18 +38,14 @@ public class ShoppingList extends Fragment {
 
         // Set Up recycler view
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        /** mRecyclerView.setAdapter(new ItemAdapter()); */
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setHasFixedSize(false);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("shopping-list");
-        Log.i("shoppingList", mFirebaseDatabaseReference.toString());
-
-        ItemAdapterV3 adapterv2 = new ItemAdapterV3(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, getContext(), "shoppingList");
-
-        mRecyclerView.setAdapter(adapterv2);
+        ItemAdapter adapter = new ItemAdapter(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, "shoppingList");
+        mRecyclerView.setAdapter(adapter);
 
         // Set up animations and touch events
-        ItemHandlerV2 itemHandler = new ItemHandlerV2(mRecyclerView, getActivity());
+        ItemHandler itemHandler = new ItemHandler(mRecyclerView, getActivity(), "shoppingList");
         itemHandler.setUpItemTouchHelper();
         itemHandler.setUpAnimationDecoratorHelper();
         return rootView;

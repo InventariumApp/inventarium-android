@@ -17,7 +17,7 @@
         />
 
     <Button
-        android:id="@+id/undo_delete_button"
+        android:id="@+id/right_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_undo"
@@ -27,7 +27,7 @@
         />
 
     <Button
-        android:id="@+id/undo_move_button"
+        android:id="@+id/left_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_undo"

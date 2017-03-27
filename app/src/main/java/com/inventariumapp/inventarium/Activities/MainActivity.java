@@ -14,10 +14,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.zxing.client.android.CaptureActivity;
 import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
@@ -25,8 +27,8 @@ import com.inventariumapp.inventarium.R;
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("testingDB");
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     private Pantry pantry;
     private ShoppingList shoppingList;
     private TabLayout tabLayout;
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Initialize Firebase Auth
+        FirebaseApp.initializeApp(this);
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("testingDB");
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 //        if (mFirebaseUser == null) {
@@ -116,6 +121,25 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, ManualInput.class);
         intent.putExtra("message", Integer.toString(tabLayout.getSelectedTabPosition()));
         startActivity(intent);
+    }
+
+    public void onBarcodeClick(View v) {
+        Intent intent = new Intent(getApplicationContext(),CaptureActivity.class);
+        intent.setAction("com.google.zxing.client.android.SCAN");
+        intent.putExtra("SAVE_HISTORY", false);
+        startActivityForResult(intent, 0);
+    }
+
+    // Get the results:
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = data.getStringExtra("SCAN_RESULT");
+            } else if (resultCode == RESULT_CANCELED) {
+// Handle cancel
+            }
+        }
     }
 
 }

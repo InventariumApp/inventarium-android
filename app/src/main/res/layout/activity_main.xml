@@ -71,7 +71,9 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/barcode_scan"
                 android:layout_marginStart="15dp"
-                android:background="@drawable/image_recognition"/>
+                android:background="@drawable/image_recognition"
+                android:onClick="onImageClick"
+                android:clickable="true"/>
 
         </RelativeLayout>
     </LinearLayout>

@@ -5,64 +5,91 @@
     android:id="@+id/activity_main2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context="com.inventariumapp.inventarium.Activities.MainActivity">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="@color/DarkGray"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
-        />
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <!-- The navigation drawer -->
+        <ListView android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111"/>
+    </android.support.v4.widget.DrawerLayout>
 
-    <FrameLayout
-        android:id="@+id/frame_container"
-        android:layout_width="match_parent"
-        android:layout_height="480dp" /> <!-- another way to do this? -->
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bottom_layout">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/manual_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="@string/manual_input"
-            android:background="@drawable/manual_input"
-            android:onClick="onManualClick"
-            android:clickable="true"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:src="@drawable/ic_menu_black_24dp"/>
 
-        <ImageButton
-            android:id="@+id/barcode_scan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/manual_input"
-            android:layout_marginStart="120dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/barcode_scan"
-            android:onClick="onBarcodeClick"
-            android:clickable="true"/>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="@color/DarkGray"
+                app:tabGravity="fill"
+                app:tabMode="fixed" />
+        </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="480dp" /> <!-- another way to do this? -->
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_layout">
 
-        <ImageButton
-            android:id="@+id/image_recognition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/barcode_scan"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/image_recognition"/>
+            <TextView
+                android:id="@+id/manual_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/manual_input"
+                android:background="@drawable/manual_input"
+                android:onClick="onManualClick"
+                android:clickable="true"/>
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/barcode_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/manual_input"
+                android:layout_marginStart="120dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/barcode_scan"
+                android:onClick="onBarcodeClick"
+                android:clickable="true"/>
 
+            <ImageButton
+                android:id="@+id/image_recognition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/barcode_scan"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/image_recognition"/>
+
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

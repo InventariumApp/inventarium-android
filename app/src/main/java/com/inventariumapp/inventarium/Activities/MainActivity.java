@@ -20,8 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,21 +33,21 @@ import android.Manifest;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
 
-    // Tabs/Menu
+    // FireBase
+    private FirebaseDatabase database;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener authListener;
+
+    private String user;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private TabLayout tabLayout;
     private Pantry pantry;
     private ShoppingList shoppingList;
 
-    // FireBase
-    private FirebaseDatabase database;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener authListener;
-    private FirebaseUser mFirebaseUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +55,11 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().hide(); // Hides the title bar
         setContentView(R.layout.activity_main);
 
-        //get firebase auth instance
+        // Initialize Firebase
+        FirebaseApp.initializeApp(this);
+        database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("testingDB");
         mFirebaseAuth = FirebaseAuth.getInstance();
-
-        //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -74,12 +72,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
-
-        // Initialize Firebase
-        FirebaseApp.initializeApp(this);
-        database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("testingDB");
-
 
         // Set Variables
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -113,32 +105,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private void selectItem(int position) {
-        switch (position) {
-            case 0: signOut();
-        }
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    private void signOut() {
-        mFirebaseAuth.signOut();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        Log.d("Main Activity", "onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
-    }
-
     private void setTabs() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
@@ -156,8 +122,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void setCurrentTabFragment(int tabPosition)
-    {
+    private void setCurrentTabFragment(int tabPosition) {
         switch (tabPosition)
         {
             case 0 :
@@ -182,6 +147,25 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText("Shopping List"));
     }
 
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        switch (position) {
+            case 0: signOut();
+        }
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void signOut() {
+        mFirebaseAuth.signOut();
+    }
+
     public void onManualClick(View v) {
         Intent intent = new Intent(this, ManualInput.class);
         intent.putExtra("message", Integer.toString(tabLayout.getSelectedTabPosition()));
@@ -189,7 +173,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onMenuClick(View v) {
-        Log.i("onMenuClick", "Clicked!!!!!!!!!!!!!!!!!");
         mDrawerLayout.openDrawer(GravityCompat.START, true);
     }
 
@@ -203,8 +186,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             requestCameraPermission();
         }
-
-
     }
 
     private void requestCameraPermission() {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.R;
@@ -44,13 +45,14 @@ public class ManualInput extends AppCompatActivity {
             Toast.makeText(this, "You did not enter a count", Toast.LENGTH_SHORT).show();
             return;
         }
-        Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),"iphoneaccount@gmail,com");
+        String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
+        Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),user);
         if (message.equals("0")) {
-            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("pantry-list");
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
             mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }
         else if (message.equals("1")) {
-            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("shopping-list");
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
             mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }
         else {

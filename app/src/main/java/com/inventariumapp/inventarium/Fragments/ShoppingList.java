@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.R;
@@ -40,7 +41,8 @@ public class ShoppingList extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setHasFixedSize(false);
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child("iphoneaccount@gmail,com").child("shopping-list");
+        String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
         ItemAdapter adapter = new ItemAdapter(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, "shoppingList");
         mRecyclerView.setAdapter(adapter);
 

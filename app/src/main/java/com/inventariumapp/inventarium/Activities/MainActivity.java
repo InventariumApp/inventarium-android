@@ -1,8 +1,10 @@
 package com.inventariumapp.inventarium.Activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import com.google.zxing.client.android.CaptureActivity;
 import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
+import android.Manifest;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -124,6 +127,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onBarcodeClick(View v) {
+
+        // Check for the camera permission before accessing the camera.  If the
+        // permission is not granted yet, request permission.
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            startScan();
+        } else {
+            requestCameraPermission();
+        }
+
+
+    }
+
+    private void requestCameraPermission() {
+        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+        ActivityCompat.requestPermissions(this, permissions, 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        if (requestCode != 1) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // we have permission, so create the camerasource
+            startScan();
+            return;
+        }
+        // Else permission not granted
+        Toast.makeText(this, "Cannot use barcode scan without granting camera permission", Toast.LENGTH_SHORT).show();
+    }
+
+    private void startScan() {
         Intent intent = new Intent(getApplicationContext(),CaptureActivity.class);
         intent.setAction("com.google.zxing.client.android.SCAN");
         intent.putExtra("SAVE_HISTORY", false);
@@ -136,6 +176,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
+                String format = data.getStringExtra("SCAN_RESULT_FORMAT");
             } else if (resultCode == RESULT_CANCELED) {
 // Handle cancel
             }

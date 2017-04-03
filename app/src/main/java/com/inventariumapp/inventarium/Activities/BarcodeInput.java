@@ -20,6 +20,7 @@ public class BarcodeInput extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i("barcodeInput", "oncreate!");
         super.onCreate(savedInstanceState);
         //set the main content layout of the Activity
         setContentView(R.layout.activity_barcode_input);
@@ -32,6 +33,7 @@ public class BarcodeInput extends AppCompatActivity {
     //product barcode mode
     public void scanBar(View v) {
         try {
+            Log.i("barcodeInput", "scanBar!");
             //start the scanning activity from the com.google.zxing.client.android.SCAN intent
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
@@ -45,6 +47,7 @@ public class BarcodeInput extends AppCompatActivity {
     //product qr code mode
     public void scanQR(View v) {
         try {
+            Log.i("barcodeInput", "scanQR!");
             //start the scanning activity from the com.google.zxing.client.android.SCAN intent
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
@@ -57,6 +60,7 @@ public class BarcodeInput extends AppCompatActivity {
 
     //alert dialog for downloadDialog
     private static AlertDialog showDialog(final Activity act, CharSequence title, CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
+        Log.i("barcodeInput", "alert!");
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
         downloadDialog.setTitle(title);
         downloadDialog.setMessage(message);

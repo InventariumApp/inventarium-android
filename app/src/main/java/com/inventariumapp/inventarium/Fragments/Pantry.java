@@ -1,5 +1,6 @@
 package com.inventariumapp.inventarium.Fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.inventariumapp.inventarium.Activities.LogInActivity;
+import com.inventariumapp.inventarium.Activities.MainActivity;
 import com.inventariumapp.inventarium.Utility.ItemAdapter;
 import com.inventariumapp.inventarium.Utility.Item;
 import com.inventariumapp.inventarium.R;
@@ -41,6 +44,11 @@ public class Pantry extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setHasFixedSize(false);
+
+        // Not sure why its bugging but ill check here for now
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            return null;
+        }
         String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
         ItemAdapter adapter = new ItemAdapter(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, "pantry");

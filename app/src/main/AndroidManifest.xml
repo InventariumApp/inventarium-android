@@ -10,8 +10,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.MainActivity">
             <uses-permission android:name="android.permission.CAMERA" />
-            <uses-feature android:name="android.hardware.camera"
+
+            <uses-feature
+                android:name="android.hardware.camera"
                 android:required="true" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,11 +24,14 @@
         <activity
             android:name=".Activities.SignUpActivity"
             android:label="@string/title_activity_sign_in"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.ManualInput" />
         <activity android:name=".Activities.ResetPasswordActivity" />
-        <activity android:name=".Activities.LogInActivity"></activity>
+        <activity android:name=".Activities.LogInActivity" />
+        <activity
+            android:name=".Activities.ItemDetailCard"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity android:name=".Activities.WebViewActivity"></activity>
     </application>
 
 </manifest>

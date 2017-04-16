@@ -19,11 +19,15 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -39,6 +43,15 @@ import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
 import android.Manifest;
+import com.android.volley.*;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -56,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Pantry pantry;
     private ShoppingList shoppingList;
+
 
 
 
@@ -85,20 +99,24 @@ public class MainActivity extends AppCompatActivity {
 
         // Set Variables
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        //mDrawerList = (ListView) findViewById(R.id.left_drawer);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         pantry = new Pantry();
         shoppingList = new ShoppingList();
         ArrayList<String> test = new ArrayList<String>();
         test.add("signOut");
 
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, test));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+//        // Set the adapter for the list view
+//        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+//                R.layout.drawer_list_item, test));
+//        // Set the list's click listener
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         setTabs();
         setupTabLayout();
+
+//        Intent intent = new Intent(this, ItemDetailCard.class);
+//        intent.putExtra("message", "doritos");
+//        startActivity(intent);
     }
 
     @Override
@@ -157,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Shopping List"));
     }
 
-
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onManualClick(View v) {
         Intent intent = new Intent(this, ManualInput.class);
-        intent.putExtra("message", Integer.toString(tabLayout.getSelectedTabPosition()));
+        intent.putExtra("list", Integer.toString(tabLayout.getSelectedTabPosition()));
         startActivity(intent);
     }
 
@@ -249,13 +266,51 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 String format = data.getStringExtra("SCAN_RESULT_FORMAT");
+
+                // Instantiate the RequestQueue.
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url ="http://159.203.166.121:8080/product_name?barcode=" + contents;
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.i("HTTP Response: ", response);
+                                try {
+                                    JSONObject obj = new JSONObject(response);
+                                    String productName = obj.get("clean_nm").toString();
+                                    addProduct(productName);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("HTTP Get Err: ", error.toString());
+                    }
+                });
+                queue.add(stringRequest);
             } else if (resultCode == RESULT_CANCELED) {
             // Handle cancel
             }
         }
         if (requestCode == 2) {
             encodeBitmapAndSaveToFirebase(data);
+            // HTTP Get request
+            // .get(159.203.166.121:8080/image_data/{file_name}" ) {
+            // expecting: {'clean_nm': productName}
+            //}
+            //
         }
+    }
+
+    public void addProduct(String productName) {
+        Intent intent = new Intent(this, ManualInput.class);
+        intent.putExtra("list", "0");
+        intent.putExtra("message", productName);
+        startActivity(intent);
     }
 
     public void encodeBitmapAndSaveToFirebase(Intent data) {
@@ -281,6 +336,21 @@ public class MainActivity extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
             }
         });
+    }
+
+    public void purchaseItem(View v){
+
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        intent.putExtra("url", "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=doritos");
+        startActivity(intent);
+    }
+
+    public void shareList() {
+        // HTTP Post request
+        // .post(159.203.166.121:8080/share_list", {user_email {email}, recipient_phone_number {1 + number} ) {
+        // expecting: {'clean_nm': productName}
+        //}
+        //
     }
 
 }

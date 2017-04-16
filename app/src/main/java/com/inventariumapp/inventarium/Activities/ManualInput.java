@@ -15,7 +15,7 @@ import com.inventariumapp.inventarium.R;
 import com.inventariumapp.inventarium.Utility.Item;
 
 public class ManualInput extends AppCompatActivity {
-    private String message;
+    private String list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,13 @@ public class ManualInput extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        message = intent.getStringExtra("message");
+        list = intent.getStringExtra("list");
+        String message = intent.getStringExtra("message");
+
+        if (message != null) {
+            EditText text = (EditText) findViewById(R.id.name);
+            text.setText(message);
+        }
     }
 
     public void clickCancel(View view) {
@@ -47,11 +53,11 @@ public class ManualInput extends AppCompatActivity {
         }
         String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
         Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),user);
-        if (message.equals("0")) {
+        if (list.equals("0")) { // Pantry
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
             mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }
-        else if (message.equals("1")) {
+        else if (list.equals("1")) { // ShoppingList
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
             mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }

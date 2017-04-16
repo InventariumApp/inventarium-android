@@ -1,6 +1,7 @@
 package com.inventariumapp.inventarium.Fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +30,7 @@ import com.inventariumapp.inventarium.Utility.ItemHolder;
 public class Pantry extends Fragment {
 
     private RecyclerView mRecyclerView;
+    private String itemToPurchase;
 
     @Override
     // Returns a View from this method that is the root of your fragment's layout
@@ -59,6 +62,9 @@ public class Pantry extends Fragment {
         itemHandler.setUpItemTouchHelper();
         itemHandler.setUpAnimationDecoratorHelper();
 
+        //itemToPurchase = ((TextView)getView().findViewById(R.id.item_name)).getText().toString();
         return rootView;
     }
+
+
 }

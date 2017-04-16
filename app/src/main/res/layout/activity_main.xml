@@ -9,22 +9,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:background="@color/purple">
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:src="@drawable/ic_menu_black_24dp"
+                android:tint="@color/Snow"
                 android:onClick="onMenuClick"
                 android:clickable="true"/>
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="@color/DarkGray"
+                android:tabStripEnabled="false"
+                app:tabIndicatorColor="@color/Snow"
+                app:tabTextColor="@color/Snow"
+                app:tabSelectedTextColor="@color/Snow"
                 app:tabGravity="fill"
                 app:tabMode="fixed" />
         </LinearLayout>
@@ -32,13 +39,22 @@
         <FrameLayout
             android:id="@+id/frame_container"
             android:layout_width="match_parent"
-            android:layout_height="480dp" /> <!-- another way to do this? -->
-
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <!-- Bottom Bar -->
+        <!--
+        <View
+            android:id="@+id/shadow"
+            android:layout_width="fill_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/shadow">
+        </View>
+        -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bottom_layout">
-
+            android:layout_height="50dp"
+            android:background="@color/Snow"
+            android:elevation="40dp">
             <TextView
                 android:id="@+id/manual_input"
                 android:layout_width="wrap_content"
@@ -48,32 +64,30 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="@string/manual_input"
-                android:background="@drawable/manual_input"
+                android:textSize="15dp"
+                android:textColor="@color/purple"
                 android:onClick="onManualClick"
                 android:clickable="true"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/barcode_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/manual_input"
-                android:layout_marginStart="120dp"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/barcode_scan"
-                android:onClick="onBarcodeClick"
-                android:clickable="true"/>
+                android:layout_marginStart="110dp"
+                android:src="@drawable/barcode"
+                android:tint="@color/purple"/>
 
-            <ImageButton
-                android:id="@+id/image_recognition"
+            <ImageView
+                android:id="@+id/camera_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/barcode_scan"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/image_recognition"
-                android:onClick="onImageClick"
-                android:clickable="true"/>
+                android:src="@drawable/ic_photo_camera_black_24dp"
+                android:tint="@color/purple"/>
 
         </RelativeLayout>
     </LinearLayout>
@@ -99,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8xdp">
+            android:layout_marginTop="8dp">
             <ImageView
                 android:id="@+id/lists_image"
                 android:layout_width="wrap_content"

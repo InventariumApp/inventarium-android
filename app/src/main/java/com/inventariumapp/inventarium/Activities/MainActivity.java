@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupTabLayout() {
         tabLayout.addTab(tabLayout.newTab().setText("Pantry"),true);
         tabLayout.addTab(tabLayout.newTab().setText("Shopping List"));
+
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

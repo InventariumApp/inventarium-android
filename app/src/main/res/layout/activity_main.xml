@@ -77,7 +77,9 @@
                 android:layout_toEndOf="@+id/manual_input"
                 android:layout_marginStart="110dp"
                 android:src="@drawable/barcode"
-                android:tint="@color/purple"/>
+                android:tint="@color/purple"
+                android:onClick="onBarcodeClick"
+                android:clickable="true"/>
 
             <ImageView
                 android:id="@+id/camera_input"

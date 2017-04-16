@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -39,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.zxing.client.android.CaptureActivity;
+import com.inventariumapp.inventarium.Fragments.ManualInputDialog;
 import com.inventariumapp.inventarium.Fragments.Pantry;
 import com.inventariumapp.inventarium.Fragments.ShoppingList;
 import com.inventariumapp.inventarium.R;
@@ -195,9 +197,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onManualClick(View v) {
-        Intent intent = new Intent(this, ManualInput.class);
-        intent.putExtra("list", Integer.toString(tabLayout.getSelectedTabPosition()));
-        startActivity(intent);
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = ManualInputDialog.newInstance(tabLayout.getSelectedTabPosition());
+        dialog.show(getSupportFragmentManager(), "ManualInputDialog");
+
+//        Intent intent = new Intent(this, ManualInputTest.class);
+//        intent.putExtra("list", Integer.toString(tabLayout.getSelectedTabPosition()));
+//        startActivity(intent);
     }
 
     public void onMenuClick(View v) {

@@ -30,8 +30,9 @@
         <activity android:name=".Activities.LogInActivity" />
         <activity
             android:name=".Activities.ItemDetailCard"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <activity android:name=".Activities.WebViewActivity"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".Activities.WebViewActivity" />
+        <activity android:name=".Activities.ManualInputTest"></activity>
     </application>
 
 </manifest>

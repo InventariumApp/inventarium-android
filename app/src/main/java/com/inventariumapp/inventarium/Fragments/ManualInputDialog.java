@@ -37,13 +37,15 @@ public class ManualInputDialog extends DialogFragment {
     private TextView add;
     private AutoCompleteTextView text;
     private int list;
+    private String name;
 
-    public static ManualInputDialog newInstance(int num) {
+    public static ManualInputDialog newInstance(int num, String name) {
         ManualInputDialog f = new ManualInputDialog();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putInt("list", num);
+        args.putString("Name", name);
         f.setArguments(args);
 
         return f;
@@ -65,6 +67,9 @@ public class ManualInputDialog extends DialogFragment {
         add = (TextView) rootView.findViewById(R.id.add_dialog);
         text = (AutoCompleteTextView) rootView.findViewById(R.id.categoryText);
 
+        if (name != null) {
+            text.setText(name);
+        }
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

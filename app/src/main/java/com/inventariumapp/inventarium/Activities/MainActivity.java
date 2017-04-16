@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onManualClick(View v) {
         // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = ManualInputDialog.newInstance(tabLayout.getSelectedTabPosition());
+        DialogFragment dialog = ManualInputDialog.newInstance(tabLayout.getSelectedTabPosition(), "");
         dialog.show(getSupportFragmentManager(), "ManualInputDialog");
 
 //        Intent intent = new Intent(this, ManualInputTest.class);
@@ -304,16 +304,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (requestCode == 2) {
-            encodeBitmapAndSaveToFirebase(data);
-            // HTTP Get request
-            // .get(159.203.166.121:8080/image_data/{file_name}" ) {
-            // expecting: {'clean_nm': productName}
-            //}
-            //
+            if(resultCode == RESULT_OK){
+                encodeBitmapAndSaveToFirebase(data);
+                // HTTP Get request
+                // .get(159.203.166.121:8080/image_data/{file_name}" ) {
+                // expecting: {'clean_nm': productName}
+                //}
+                //
+            }
         }
     }
 
     public void addProduct(String productName) {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = ManualInputDialog.newInstance(0, productName);
+        dialog.show(getSupportFragmentManager(), "ManualInputDialog");
+
         Intent intent = new Intent(this, ManualInput.class);
         intent.putExtra("list", "0");
         intent.putExtra("message", productName);
@@ -360,4 +366,8 @@ public class MainActivity extends AppCompatActivity {
         //
     }
 
+    public void onListShareClick(View view) {
+        Intent intent = new Intent(this, ListShareActivity.class);
+        startActivity(intent);
+    }
 }

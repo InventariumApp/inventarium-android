@@ -32,7 +32,8 @@
             android:name=".Activities.ItemDetailCard"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".Activities.WebViewActivity" />
-        <activity android:name=".Activities.ManualInputTest"></activity>
+        <activity android:name=".Activities.ManualInputTest" />
+        <activity android:name=".Activities.ListShareActivity"></activity>
     </application>
 
 </manifest>

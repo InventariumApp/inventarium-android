@@ -21,7 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.inventariumapp.inventarium.Activities.ItemDetail;
 import com.inventariumapp.inventarium.Activities.MainActivity;
 import com.inventariumapp.inventarium.R;
@@ -72,7 +74,10 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
                 View sharedView = view;
                 String transitionName = "item_detail_transition";
                 ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(activity, sharedView, transitionName);
-                getItemDetails(viewHolder.getNameView().getText().toString(), intent, transitionActivityOptions);
+                intent.putExtra("img", item.getImageURL());
+                intent.putExtra("name", item.getName());
+                intent.putExtra("price", item.getPrice());
+                activity.startActivity(intent, transitionActivityOptions.toBundle());
             }
         });
 
@@ -86,49 +91,51 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
         });
     }
 
-    private void getItemDetails(String name, final Intent intent, final ActivityOptions transitionActivityOptions) {
-        // 0:name, 1:price, 2:imageURL
-        final String[] itemDetails = new String[3];
-        RequestQueue queue = Volley.newRequestQueue(activity);
-
-        String requestedItemDetails = url + name;
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, requestedItemDetails,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("HTTP Response: ", response);
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            if (obj.has("status")){
-                                if(obj.get("status").toString().contains("No result for barcode")) {
-                                    // showNotFound();
-                                }
-                            }
-                            else {
-                                Log.i("getting image", "!");
-                                String productName = obj.get("clean_nm").toString();
-                                itemDetails[0] = productName;
-                                String price = obj.get("price").toString();
-                                itemDetails[1] = price;
-                                String img = obj.get("image_url").toString();
-                                itemDetails[2] = img;
-                                sendItemDetails(itemDetails, intent, transitionActivityOptions);
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("HTTP Get Err: ", error.toString());
-            }
-        });
-        queue.add(stringRequest);
-    }
+//    private void getItemDetails(String name, final Intent intent, final ActivityOptions transitionActivityOptions) {
+//        // 0:name, 1:price, 2:imageURL
+//        final String[] itemDetails = new String[3];
+//        RequestQueue queue = Volley.newRequestQueue(activity);
+//
+//        String urlEncodedName = name.replace(" ", "%20");
+//        Log.i("URL: ", url + urlEncodedName);
+//        String requestedItemDetails = url + urlEncodedName;
+//
+//        // Request a string response from the provided URL.
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, requestedItemDetails,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.i("HTTP Response: ", response);
+//                        try {
+//                            JSONObject obj = new JSONObject(response);
+//                            if (obj.has("status")){
+//                                if(obj.get("status").toString().contains("No result for barcode")) {
+//                                    // showNotFound();
+//                                }
+//                            }
+//                            else {
+//                                Log.i("getting image", "!");
+//                                String productName = obj.get("clean_nm").toString();
+//                                itemDetails[0] = productName;
+//                                String price = obj.get("price").toString();
+//                                itemDetails[1] = price;
+//                                String img = obj.get("image_url").toString();
+//                                itemDetails[2] = img;
+//                                sendItemDetails(itemDetails, intent, transitionActivityOptions);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("HTTP Get Err: ", error.toString());
+//            }
+//        });
+//        queue.add(stringRequest);
+//    }
 
     private void sendItemDetails(String[] details, Intent intent, ActivityOptions transitionActivityOptions) {
         // 0:name, 1:price, 2:imageURL
@@ -296,6 +303,8 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
             }
             else if(listName.equals("shoppingList")) {
                 getRef(position).getParent().getParent().child("pantry-list").child(item.getName()).setValue(item);
+                getRef(position).getParent().getParent().child("item-history").child(getItem(position).getName().toLowerCase()).push().setValue(System.currentTimeMillis());
+                getRef(position).getParent().getParent().child("item-history").child(getItem(position).getName().toLowerCase()).child("category").setValue(getItem(position).getCategory());
             }
             else {
                 Log.i("ItemAdapter.removeItem", "Invalid List!");

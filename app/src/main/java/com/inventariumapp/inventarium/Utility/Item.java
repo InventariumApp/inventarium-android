@@ -13,15 +13,33 @@ public class Item {
     private String name;
     private int count;
     private String addedByUser;
+    private String imageURL;
+    private String price;
+    private String category;
 
     // Needed for Firebase
     public Item() {
 
     }
-    public Item(String name, int count, String addedByUser) {
+    public Item(String name, int count, String addedByUser, String imageURL, String price, String category) {
         this.name = name;
         this.count = count;
         this.addedByUser = addedByUser;
+        this.imageURL = imageURL;
+        this.price = price;
+        this.category = category;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public String getName() {

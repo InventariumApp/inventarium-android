@@ -52,14 +52,14 @@ public class ManualInput extends AppCompatActivity {
             return;
         }
         String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
-        Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),user);
+        //Item item = new Item(name.getText().toString(), Integer.parseInt(count.getText().toString()),user);
         if (list.equals("0")) { // Pantry
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
-            mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
+           // mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }
         else if (list.equals("1")) { // ShoppingList
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
-            mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
+          //  mFirebaseDatabaseReference.child(name.getText().toString()).setValue(item);
         }
         else {
             Log.i("ManualInput.clickAdd", "unknown tab position");

@@ -1,13 +1,37 @@
 package com.inventariumapp.inventarium.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
 import com.inventariumapp.inventarium.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListShareActivity extends AppCompatActivity {
 
@@ -81,7 +105,88 @@ public class ListShareActivity extends AppCompatActivity {
         });
     }
 
+    private void exit() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public void onShareClick(View v) {
 
+        String phone = phoneNumber.getText().toString();
+        if (!(phone.length() == 14)) {
+            Log.i("Phone number Length: ", Integer.toString(phoneNumber.getText().toString().length()));
+            Toast.makeText(this, "Please enter a valid number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
+
+        try {
+            Toast.makeText(this, "Thank You for sharing!", Toast.LENGTH_SHORT).show();
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "https://inventarium.me/share_list";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("user_email", userEmail);
+            Log.i("phone: ", phone);
+            String cleanPhone = phone.replace("(", "");
+            cleanPhone = cleanPhone.replace(")", "");
+            cleanPhone = cleanPhone.replace(" ", "");
+            cleanPhone = cleanPhone.replace("-", "");
+            cleanPhone = "1" + cleanPhone;
+            Log.i("phone: ", cleanPhone);
+            jsonBody.put("recipient_phone_number", cleanPhone);
+            final String requestBody = jsonBody.toString();
+            final String finalUserEmail = userEmail;
+            final String finalCleanPhone = cleanPhone;
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("response recieved!", response);
+                    exit();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                protected Map<String,String> getParams(){
+                    Map<String,String> params = new HashMap<String, String>();
+                    params.put("user_email", finalUserEmail);
+                    params.put("recipient_phone_number", finalCleanPhone);
+                    return params;
+                }
+
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                        // can get more details such as response.headers
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

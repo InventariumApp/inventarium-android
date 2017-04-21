@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://159.203.166.121/product_data_for_barcode?barcode=" + contents;
+                String url ="https://inventarium.me/product_data_for_barcode?barcode=" + contents;
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -314,6 +314,42 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 2) {
             if(resultCode == RESULT_OK){
                 encodeBitmapAndSaveToFirebase(data);
+                // Instantiate the RequestQueue.
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String filename = "rsSCHnItaZc6UOBZdF1PDer5UHf1%2Fimage";
+                String url ="https://inventarium.me/image_data/" + filename;
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.i("HTTP Response: ", response);
+                                try {
+                                    JSONObject obj = new JSONObject(response);
+                                    if (obj.has("status")){
+                                        if(obj.get("status").toString().contains("No result for barcode")) {
+                                            showNotFound();
+                                        }
+                                    }
+                                    else {
+
+                                        String productName = obj.get("product_name").toString();
+                                        Log.i("product name is!: ", productName);
+                                        addProduct(productName);
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("HTTP Get Err: ", error.toString());
+                    }
+                });
+                queue.add(stringRequest);
                 // HTTP Get request
                 // .get(159.203.166.121:8080/image_data/{file_name}" ) {
                 // expecting: {'clean_nm': productName}

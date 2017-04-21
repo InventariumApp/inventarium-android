@@ -1,10 +1,12 @@
 package com.inventariumapp.inventarium.Fragments;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +31,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +45,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.inventariumapp.inventarium.R;
 import com.inventariumapp.inventarium.Utility.Item;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +66,8 @@ public class ManualInputDialog extends DialogFragment {
     private AutoCompleteTextView text;
     private LinearLayout bottom;
     private int list; // 0 = Pantry, 1 = shopping list
-    private String productName;
+    private String name;
+    private final String url =  "https://inventarium.me/product_data_for_name/";
 
     public static ManualInputDialog newInstance(int num, String name) {
         ManualInputDialog f = new ManualInputDialog();
@@ -64,7 +76,7 @@ public class ManualInputDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("list", num);
         Log.i("list number is: ", Integer.toString(num));
-        args.putString("productName", name);
+        args.putString("name", name);
         f.setArguments(args);
 
         return f;
@@ -75,7 +87,7 @@ public class ManualInputDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         Log.i("Num on create: ", Integer.toString(getArguments().getInt("list")));
         list = getArguments().getInt("list");
-        productName = getArguments().getString("productName");
+        name = getArguments().getString("name");
     }
 
     @Override
@@ -85,7 +97,7 @@ public class ManualInputDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         list = getArguments().getInt("list");
-        productName = getArguments().getString("productName");
+        name = getArguments().getString("name");
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         View rootView = inflater.inflate(R.layout.fragment_manual_input_dialog, null);
@@ -97,7 +109,7 @@ public class ManualInputDialog extends DialogFragment {
         text = (AutoCompleteTextView) rootView.findViewById(R.id.categoryText);
         box = (LinearLayout) rootView.findViewById(R.id.manual_input_dialog);
         bottom = (LinearLayout) rootView.findViewById(R.id.manual_input_bottom);
-        //Log.i("Found The Name2!", productName);
+        //Log.i("Found The Name2!", name);
 
         // Firebase dataBase
         DatabaseReference mFirebaseDatabaseReference;
@@ -153,9 +165,9 @@ public class ManualInputDialog extends DialogFragment {
             }
         });
 
-        if (productName != null) {
-            Log.i("Found The Name3!", productName);
-            text.setText(productName);
+        if (name != null) {
+            Log.i("Found The Name3!", name);
+            text.setText(name);
         }
 
         minusButton.setOnClickListener(new View.OnClickListener() {
@@ -194,34 +206,92 @@ public class ManualInputDialog extends DialogFragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Firebase dataBase
-                DatabaseReference mFirebaseDatabaseReference;
 
                 if (text.getText().toString().matches("")) {
                     Toast.makeText(getContext(), "You did not enter a item name", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.i("List # is:", Integer.toString(list));
-                String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
-                Item item = new Item(text.getText().toString(), Integer.parseInt(count.getText().toString()),user);
-                if (list == 0) { // Pantry
-                    mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
-                    mFirebaseDatabaseReference.child(text.getText().toString()).setValue(item);
-                    mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("item-history");
-                    mFirebaseDatabaseReference.child(text.getText().toString()).push().setValue(System.currentTimeMillis());
-                }
-                else if (list == 1) { // ShoppingList
-                    mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
-                    mFirebaseDatabaseReference.child(text.getText().toString()).setValue(item);
-                }
-                else {
-                    Log.i("ManualInput.clickAdd", "unknown tab position");
-                }
-                dismiss();
+
+                addItemDetails();
             }
         });
         builder.setView(rootView);
 
         return builder.create();
     }
+
+    String productName;
+    String price;
+    String img;
+    String category;
+
+    private void addItemDetails() {
+        // 0:name, 1:price, 2:imageURL
+        final String[] itemDetails = new String[3];
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        String urlEncodedName = text.getText().toString().replace(" ", "%20");
+        Log.i("URL: ", url + urlEncodedName);
+        String requestedItemDetails = url + urlEncodedName;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, requestedItemDetails,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("HTTP Response: ", response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (obj.has("status")){
+                                if(obj.get("status").toString().contains("No result for barcode")) {
+                                    // showNotFound();
+                                }
+                            }
+                            else {
+                                Log.i("getting image", "!");
+                                productName = obj.get("clean_nm").toString();
+                                price = obj.get("price").toString();
+                                img = obj.get("image_url").toString();
+                                category = obj.get("category").toString();
+                                sendDetails();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("HTTP Get Err: ", error.toString());
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    private void sendDetails() {
+        // Firebase dataBase
+        DatabaseReference mFirebaseDatabaseReference;
+
+        String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
+        Item item = new Item(productName, Integer.parseInt(count.getText().toString()), user, img, price, category);
+        if (list == 0) { // Pantry
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
+            mFirebaseDatabaseReference.child(text.getText().toString()).setValue(item);
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("item-history");
+            mFirebaseDatabaseReference.child(productName.toLowerCase()).push().setValue(System.currentTimeMillis());
+            mFirebaseDatabaseReference.child(productName.toLowerCase()).child("category").setValue(category);
+        }
+        else if (list == 1) { // ShoppingList
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("shopping-list");
+            mFirebaseDatabaseReference.child(text.getText().toString()).setValue(item);
+        }
+        else {
+            Log.i("ManualInput.clickAdd", "unknown tab position");
+        }
+        dismiss();
+    }
+
+
 }

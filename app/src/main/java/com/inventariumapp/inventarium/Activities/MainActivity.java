@@ -72,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private Pantry pantry;
     private ShoppingList shoppingList;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,20 +102,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         pantry = new Pantry();
         shoppingList = new ShoppingList();
-        ArrayList<String> test = new ArrayList<String>();
-        test.add("signOut");
 
-//        // Set the adapter for the list view
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-//                R.layout.drawer_list_item, test));
-//        // Set the list's click listener
-//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         setTabs();
         setupTabLayout();
-
-//        Intent intent = new Intent(this, ItemDetailCard.class);
-//        intent.putExtra("message", "doritos");
-//        startActivity(intent);
     }
 
     @Override
@@ -192,10 +178,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    private void signOut() {
-        mFirebaseAuth.signOut();
-    }
-
     public void onManualClick(View v) {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = ManualInputDialog.newInstance(tabLayout.getSelectedTabPosition(), "");
@@ -204,6 +186,16 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, ManualInputTest.class);
 //        intent.putExtra("list", Integer.toString(tabLayout.getSelectedTabPosition()));
 //        startActivity(intent);
+    }
+
+    public void onListClick(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void onAnalyticsClick(View v) {
+        Intent intent = new Intent(this, AnalyticsActivity.class);
+        startActivity(intent);
     }
 
     public void onMenuClick(View v) {
@@ -219,6 +211,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             requestCameraPermission();
         }
+    }
+
+    private void signOut() {
+        mFirebaseAuth.signOut();
+    }
+
+    public void signOut(View v) {
+        mFirebaseAuth.signOut();
     }
 
     public void onImageClick(View v) {
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://159.203.166.121:8080/product_name?barcode=" + contents;
+                String url ="http://159.203.166.121/product_data_for_barcode?barcode=" + contents;
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -286,8 +286,16 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("HTTP Response: ", response);
                                 try {
                                     JSONObject obj = new JSONObject(response);
-                                    String productName = obj.get("clean_nm").toString();
-                                    addProduct(productName);
+                                    if (obj.has("status")){
+                                        if(obj.get("status").toString().contains("No result for barcode")) {
+                                            showNotFound();
+                                        }
+                                    }
+                                    else {
+                                        String productName = obj.get("clean_nm").toString();
+                                        addProduct(productName);
+                                    }
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -317,15 +325,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void addProduct(String productName) {
         // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = ManualInputDialog.newInstance(0, productName);
+        DialogFragment dialog = ManualInputDialog.newInstance(tabLayout.getSelectedTabPosition(), productName);
         dialog.show(getSupportFragmentManager(), "ManualInputDialog");
 
-        Intent intent = new Intent(this, ManualInput.class);
-        intent.putExtra("list", "0");
-        intent.putExtra("message", productName);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ManualInput.class);
+//        intent.putExtra("list", "0");
+//        intent.putExtra("message", productName);
+//        startActivity(intent);
     }
 
+    public void showNotFound() {
+        Toast.makeText(this, "Item was not found, please enter manually", Toast.LENGTH_SHORT).show();
+    }
     public void encodeBitmapAndSaveToFirebase(Intent data) {
         //saves the pic locally
         Bundle extras = data.getExtras();
@@ -349,13 +360,6 @@ public class MainActivity extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
             }
         });
-    }
-
-    public void purchaseItem(View v){
-
-        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
-        intent.putExtra("url", "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=doritos");
-        startActivity(intent);
     }
 
     public void shareList() {

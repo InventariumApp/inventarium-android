@@ -9,14 +9,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:elevation="40dp">
         <TextView
             android:id="@+id/item_text_view"
             android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:textColor="@color/Black"/>
+            android:textColor="@color/Black"
+            android:transitionName="item_detail_transition"/>
         <TextView
             android:id="@+id/count_text_view"
             android:layout_width="wrap_content"

@@ -26,16 +26,22 @@
         android:text="Recipient Phone Number"
         android:textSize="30dp"/>
     <EditText
+        android:id="@+id/phone_number"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:hint="(###)-(###)-(####)"/>
+        android:inputType="phone"
+        android:lines="1"
+        android:maxLength="14"
+        android:hint="(###) ###-####"/>
     <RelativeLayout
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/purple">
+        android:background="@color/purple"
+        android:clickable="true"
+        android:onClick="onShareClick">
         <TextView
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -44,15 +50,5 @@
             android:textSize="30dp"
             android:textColor="@color/white"/>
     </RelativeLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:text="SHARE"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:textColor="@color/Snow"
-        android:background="@color/purple"/>
 
 </LinearLayout>

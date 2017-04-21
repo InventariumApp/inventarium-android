@@ -54,7 +54,7 @@ public class Pantry extends Fragment {
         }
         String user = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace('.', ',');
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference("lists").child(user).child("pantry-list");
-        ItemAdapter adapter = new ItemAdapter(Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, "pantry");
+        ItemAdapter adapter = new ItemAdapter(getActivity(), Item.class, R.layout.item_row_view, ItemHolder.class, mFirebaseDatabaseReference, "pantry");
         mRecyclerView.setAdapter(adapter);
 
         // Set up animations and touch events

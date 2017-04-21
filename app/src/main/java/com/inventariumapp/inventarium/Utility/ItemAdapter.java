@@ -1,12 +1,34 @@
 package com.inventariumapp.inventarium.Utility;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.v4.util.Pair;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
+import com.inventariumapp.inventarium.Activities.ItemDetail;
+import com.inventariumapp.inventarium.Activities.MainActivity;
+import com.inventariumapp.inventarium.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +55,101 @@ public class ItemAdapter extends FirebaseRecyclerAdapter<Item, ItemHolder> {
     // Either "shoppingList" or "pantry
     private String listName;
 
-    public ItemAdapter(Class<Item> modelClass, int modelLayout, Class<ItemHolder> viewHolderClass, DatabaseReference ref, String listName) {
+    private final Activity activity;
+
+    private final String url =  "https://inventarium.me/product_data_for_name/";
+
+    @Override
+    public void onBindViewHolder(final ItemHolder viewHolder, final int position) {
+        final Item item = getItem(position);
+        super.onBindViewHolder(viewHolder, position);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ItemDetail.class);
+
+                View sharedView = view;
+                String transitionName = "item_detail_transition";
+                ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(activity, sharedView, transitionName);
+                getItemDetails(viewHolder.getNameView().getText().toString(), intent, transitionActivityOptions);
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                // edit
+                Toast.makeText(view.getContext(), "Item long click name: " + item.getName(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+    }
+
+    private void getItemDetails(String name, final Intent intent, final ActivityOptions transitionActivityOptions) {
+        // 0:name, 1:price, 2:imageURL
+        final String[] itemDetails = new String[3];
+        RequestQueue queue = Volley.newRequestQueue(activity);
+
+        String requestedItemDetails = url + name;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, requestedItemDetails,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("HTTP Response: ", response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (obj.has("status")){
+                                if(obj.get("status").toString().contains("No result for barcode")) {
+                                    // showNotFound();
+                                }
+                            }
+                            else {
+                                Log.i("getting image", "!");
+                                String productName = obj.get("clean_nm").toString();
+                                itemDetails[0] = productName;
+                                String price = obj.get("price").toString();
+                                itemDetails[1] = price;
+                                String img = obj.get("image_url").toString();
+                                itemDetails[2] = img;
+                                sendItemDetails(itemDetails, intent, transitionActivityOptions);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("HTTP Get Err: ", error.toString());
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    private void sendItemDetails(String[] details, Intent intent, ActivityOptions transitionActivityOptions) {
+        // 0:name, 1:price, 2:imageURL
+        intent.putExtra("name", details[0]);
+        intent.putExtra("price", details[1]);
+        intent.putExtra("img", details[2]);
+        activity.startActivity(intent, transitionActivityOptions.toBundle());
+    }
+//    private void transitionToActivity(Class target, ItemHolder viewHolder, Item item) {
+//        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+//                new Pair<>(viewHolder.binding.sampleIcon, "item_detail_transition"),
+//                new Pair<>(viewHolder.binding.sampleName, activity.getString(R.string.sample_blue_title)));
+//        activity.startActivity(target, pairs, item);
+//    }
+
+
+    public ItemAdapter(Activity activity, Class<Item> modelClass, int modelLayout, Class<ItemHolder> viewHolderClass, DatabaseReference ref, String listName) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         this.listName = listName;
         itemsPendingRemoval = new ArrayList<>();
+        this.activity = activity;
     }
 
     @Override

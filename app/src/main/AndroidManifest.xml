@@ -33,7 +33,9 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".Activities.WebViewActivity" />
         <activity android:name=".Activities.ManualInputTest" />
-        <activity android:name=".Activities.ListShareActivity"></activity>
+        <activity android:name=".Activities.ListShareActivity" />
+        <activity android:name=".Activities.ItemDetail" />
+        <activity android:name=".Activities.AnalyticsActivity"></activity>
     </application>
 
 </manifest>

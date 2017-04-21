@@ -1,10 +1,15 @@
 package com.inventariumapp.inventarium.Utility;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.inventariumapp.inventarium.Activities.ItemDetail;
+import com.inventariumapp.inventarium.Activities.MainActivity;
 import com.inventariumapp.inventarium.R;
 
 /**
@@ -24,6 +29,8 @@ public class ItemHolder extends RecyclerView.ViewHolder {
         countView = (TextView) itemView.findViewById(R.id.count_text_view);
         rightButton = (Button) itemView.findViewById(R.id.right_button);
         leftButton = (Button) itemView.findViewById(R.id.left_button);
+
+        //itemView.setOnClickListener(listener);
     }
 
     public TextView getCountView() {
@@ -39,4 +46,6 @@ public class ItemHolder extends RecyclerView.ViewHolder {
     public Button getLeftButton() {
         return rightButton;
     }
+
+
 }
